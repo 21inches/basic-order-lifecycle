@@ -4,12 +4,10 @@ const tronWeb = new TronWeb({
 });
 
 function tronAddressToHex(base58Address) {
-    console.log(base58Address);
     if (!tronWeb.isAddress(base58Address)) {
         throw new Error('Invalid Tron Base58 address provided.');
     }
     const hex = tronWeb.address.toHex(base58Address);
-    console.log("`0x${hex.slice(2)}`:", `0x${hex.slice(2)}`)
     return `0x${hex.slice(2)}`;
 }
 
