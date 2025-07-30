@@ -1,6 +1,7 @@
 const { Interface, Signature } = require("ethers");
 const Sdk = require("@1inch/cross-chain-sdk");
 const Contract = require("./Resolver.json");
+const { ethers } = require("ethers");
 
 class Resolver {
   iface = new Interface(Contract.abi);
@@ -25,12 +26,14 @@ class Resolver {
       new Sdk.Address(this.srcAddress),
       amount,
       hashLock
-    );
+    ).build();
+    const hash = this.hashOrder(chainId, order);
+    immutables.orderHash = hash;
 
     return {
       to: this.srcAddress,
       data: this.iface.encodeFunctionData("deploySrc", [
-        immutables.build(),
+        immutables,
         order.build(),
         r,
         vs,
@@ -40,6 +43,21 @@ class Resolver {
       ]),
       value: order.escrowExtension.srcSafetyDeposit,
     };
+  }
+
+  hashOrder(srcChainId, order) {
+    const typedData = order.getTypedData(srcChainId);
+    const domain = {
+      name: "1inch Limit Order Protocol",
+      version: "4",
+      chainId: srcChainId,
+      verifyingContract: "0x32a209c3736c5bd52e395eabc86b9bca4f602985",
+    };
+    return ethers.TypedDataEncoder.hash(
+      domain,
+      { Order: typedData.types[typedData.primaryType] },
+      typedData.message
+    );
   }
 
   deployDst(immutables) {

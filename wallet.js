@@ -1,6 +1,5 @@
 const { AbiCoder, Contract, Wallet: PKWallet } = require("ethers");
 const ERC20 = require("./IERC20.json");
-const { ethers } = require("ethers");
 
 const coder = AbiCoder.defaultAbiCoder();
 

@@ -120,7 +120,6 @@ async function main() {
   // // sign order
   console.log("Signing order...");
   const signature = await srcChainUser.signOrder(config.src.ChainId, order);
-  const orderHash = order.getOrderHash(config.src.ChainId);
   console.log("Order signed");
 
   // fill order
