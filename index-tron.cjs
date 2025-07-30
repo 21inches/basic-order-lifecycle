@@ -11,11 +11,11 @@ const { JsonRpcProvider } = require("ethers");
 const { config } = require("./config-tron.js");
 const { Address } = Sdk;
 const { TronWeb } = require('tronweb');
+const { tronAddressToHex, hexAddressToTron } = require('./tron-utils.js');
 
 const tronWeb = new TronWeb({
   fullHost: 'https://nile.trongrid.io',
   headers: { "TRON-PRO-API-KEY": process.env.TRONGRID_API_KEY},
-  privateKey: config.src.ResolverPrivateKey
 });
 
 async function createOrder(
@@ -31,6 +31,11 @@ async function createOrder(
   resolverAddress,
   srcTimestamp
 ) {
+  if (srcChainId == 1000 || srcChainId == 1001) { // TRON & NILE
+    srcChainUserAddress = tronAddressToHex(srcChainUserAddress)
+  }
+
+
   const order = Sdk.CrossChainOrder.new(
     new Address(escrowFactoryAddress),
     {
@@ -83,16 +88,16 @@ async function createOrder(
 }
 
 async function main() {
-  const srcProvider = new JsonRpcProvider(config.src.RpcUrl);
 
   // create src and dst chain users
-  const srcChainUser = new EVMWallet(
-      config.src.UserPrivateKey,
-      srcProvider
+  const srcProvider = new JsonRpcProvider(config.src.RpcUrl);
+  const srcChainUser = new TronWallet(
+    config.src.UserPrivateKey,
+    tronWeb
   );
   const srcChainResolver = new TronWallet(
     config.src.ResolverPrivateKey,
-      tronWeb
+    tronWeb
   );
 
 

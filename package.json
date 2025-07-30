@@ -5,6 +5,7 @@
   "license": "MIT",
   "dependencies": {
     "@1inch/cross-chain-sdk": "git+https://github.com/21inches/cross-chain-sdk.git",
+    "crypto-js": "^4.2.0",
     "dotenv": "^17.2.1",
     "tronweb": "^6.0.3",
     "web3": "^4.16.0"

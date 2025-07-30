@@ -1,5 +1,5 @@
-const { Contract } = require("ethers");
 const ERC20 = require("./IERC20.json");
+const { TypedDataEncoder } = require('ethers');
 
 class TronWallet {
     tronWeb;
@@ -18,6 +18,24 @@ class TronWallet {
 
     async getAddress() {
         return this.signerAddress;
+    }
+
+    async signOrder(srcChainId, order) {
+        const typedData = order.getTypedData(srcChainId);
+        const domain = {
+            name: '1inch Limit Order Protocol',
+            version: '4',
+            chainId: srcChainId,
+            verifyingContract: "0x0656e98bf5b9457048b8ac0985cb48b1b6def4ac" // LOP on Nile
+        };
+
+        const hash = TypedDataEncoder.hash(domain, {
+            Order: typedData.types[typedData.primaryType],
+        }, typedData.message);
+
+        const hashStripped = hash.replace(/^0x/, '');
+        const signature = await this.tronWeb.trx.sign(hashStripped);
+        return signature;
     }
 
     /**
