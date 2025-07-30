@@ -1,0 +1,11 @@
+{
+  "name": "1inch",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@1inch/cross-chain-sdk": "git+https://github.com/21inches/cross-chain-sdk.git",
+    "dotenv": "^17.2.1",
+    "web3": "^4.16.0"
+  }
+}
