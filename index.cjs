@@ -128,8 +128,12 @@ async function main() {
 
   // // sign order
   console.log("Signing order...");
-  const signature = await srcChainUser.signOrder(config.src.ChainId, order);
-  console.log("Order signed");
+  const signature = await srcChainUser.signOrder(
+    config.src.ChainId,
+    order,
+    config.src.LOP
+  );
+  console.log("Order signed", signature);
 
   // fill order
   console.log("Filling order...");
@@ -148,7 +152,9 @@ async function main() {
           .setExtension(order.extension)
           .setAmountMode(Sdk.AmountMode.maker)
           .setAmountThreshold(order.takingAmount),
-        fillAmount
+        fillAmount,
+        order.escrowExtension.hashLockInfo,
+        config.src.LOP
       )
     );
   console.log("Order filled", orderFillHash);

@@ -92,13 +92,13 @@ class Wallet {
     await tx.wait();
   }
 
-  async signOrder(srcChainId, order) {
+  async signOrder(srcChainId, order, LOPAddress) {
     const typedData = order.getTypedData(srcChainId);
     const domain = {
       name: "1inch Limit Order Protocol",
       version: "4",
       chainId: srcChainId,
-      verifyingContract: "0x32a209c3736c5bd52e395eabc86b9bca4f602985",
+      verifyingContract: LOPAddress,
     };
 
     return this.signer.signTypedData(
@@ -117,11 +117,12 @@ class Wallet {
     const receipt = await res.wait(1);
 
     if (receipt && receipt.status) {
-      return {
+      const result = {
         txHash: receipt.hash,
         blockTimestamp: BigInt((await res.getBlock()).timestamp),
-        blockHash: res.blockHash,
+        blockHash: receipt.blockHash,
       };
+      return result;
     }
 
     throw new Error((await receipt?.getResult()) || "unknown error");

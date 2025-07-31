@@ -29,7 +29,7 @@ const config = {
     TrueERC20: "0x8bD9f7C82eBF9D9C830a76bAcb0E99A52163B304",
     ChainId: 84532,
     UserPrivateKey: process.env.DST_USER_PRIVATE_KEY,
-    RpcUrl: "https://base-sepolia.drpc.org",
+    RpcUrl: "https://base-sepolia-rpc.publicnode.com",
     ResolverPrivateKey: process.env.DST_RESOLVER_PRIVATE_KEY,
   },
 };

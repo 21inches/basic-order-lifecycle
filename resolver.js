@@ -17,7 +17,8 @@ class Resolver {
     signature,
     takerTraits,
     amount,
-    hashLock = order.escrowExtension.hashLockInfo
+    hashLock = order.escrowExtension.hashLockInfo,
+    LOPAddress
   ) {
     const { r, yParityAndS: vs } = Signature.from(signature);
     const { args, trait } = takerTraits.encode();
@@ -27,7 +28,7 @@ class Resolver {
       amount,
       hashLock
     ).build();
-    const hash = this.hashOrder(chainId, order);
+    const hash = this.hashOrder(chainId, order, LOPAddress);
     immutables.orderHash = hash;
 
     return {
@@ -45,13 +46,13 @@ class Resolver {
     };
   }
 
-  hashOrder(srcChainId, order) {
+  hashOrder(srcChainId, order, LOPAddress) {
     const typedData = order.getTypedData(srcChainId);
     const domain = {
       name: "1inch Limit Order Protocol",
       version: "4",
       chainId: srcChainId,
-      verifyingContract: "0x32a209c3736c5bd52e395eabc86b9bca4f602985",
+      verifyingContract: LOPAddress,
     };
     return ethers.TypedDataEncoder.hash(
       domain,
