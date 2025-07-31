@@ -31,7 +31,7 @@ async function createOrder(
   resolverAddress,
   srcTimestamp
 ) {
-  if (srcChainId == 1000 || srcChainId == 1001) { // TRON & NILE
+  if (srcChainId == 728126428 || srcChainId == 3448148188) { // TRON & NILE
     srcChainUserAddress = tronAddressToHex(srcChainUserAddress)
   }
 
@@ -59,8 +59,8 @@ async function createOrder(
       }),
       srcChainId,
       dstChainId,
-      srcSafetyDeposit: parseEther("0.001"),
-      dstSafetyDeposit: parseEther("0.001"),
+      srcSafetyDeposit: parseUnits("0.001", 6),
+      dstSafetyDeposit: parseUnits("0.001", 6),
     },
     {
       auction: new Sdk.AuctionDetails({
@@ -103,8 +103,8 @@ async function main() {
 
   // create order
   console.log("Creating order...");
-  const makingAmount = parseUnits("0.001", 18);
-  const takingAmount = parseUnits("0.001", 18);
+  const makingAmount = parseUnits("0.001", 6);
+  const takingAmount = parseUnits("0.001", 6);
   const secret =
     "0x0000000000000000000000000000000000000000000000000000000000000000";
   const srcTimestamp = BigInt(Math.floor(Date.now() / 1000));
