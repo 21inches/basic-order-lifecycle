@@ -10,7 +10,7 @@ const config = {
         EscrowSrcImplementationAddress: "0x0bc4bf8569dbbcb793788db183c7dbb4d0b2f80d", // "TB3S8U9PN4TkR4ntfcoNoZDjKiWNgZax7L",
         EscrowDstImplementationAddress: "0xdd69f5e6be02175b3953de663729b1238ff5f03c", // "TW9wGipDxFLXvqHxBn3euBY3fWBqvExA6t",
         TrueERC20: "0xf8dfdf1ab75de04f485a9871d9298a070b9bebc6", // "TYf8mVp2tC7K9AYbFFfv8gVH82JEkbKKDj",
-        ChainId: 1001,
+        ChainId: 3448148188, // NILE=3448148188,  Mainnet=728126428
         UserPrivateKey: process.env.TRON_SRC_USER_PRIVATE_KEY,
         RpcUrl: "https://nile.trongrid.io/jsonrpc",
         ResolverPrivateKey: process.env.TRON_SRC_RESOLVER_PRIVATE_KEY,
