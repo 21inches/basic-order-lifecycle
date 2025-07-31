@@ -5,7 +5,7 @@ const config = {
     src: {
         LOP: "0x0656e98bf5b9457048b8ac0985cb48b1b6def4ac", // "TAYjAyuKjKvkhkcvgJ7CgrJ8PVziU5vr4R",
         EscrowFactory: "0x4fb1926857ec058d3c6f659a376dede5bd41583f", // "THEb78FZnopZYvKpJvRcmicZLcewdmxURR",
-        ResolverContractAddress: "0xd84b5640181b78193c5f532dc9e03a760401845b", // "TVgsCzfX9t42kchuoQEjKkqUPDt92ZwsPh",
+        ResolverContractAddress: "0xb39e183b0bca24ab7278ba8804b2262ce53f2f00", // "TSLwM1GyseQtnEVJfwhGnq6dRZYXqgkKMv",
         USDT: "0xeca9bc828a3005b9a3b909f2cc5c2a54794de05f", //"TXYZopYRdj2D9XRtbG411XZZ3kM5VkAeBf",
         EscrowSrcImplementationAddress: "0x0bc4bf8569dbbcb793788db183c7dbb4d0b2f80d", // "TB3S8U9PN4TkR4ntfcoNoZDjKiWNgZax7L",
         EscrowDstImplementationAddress: "0xdd69f5e6be02175b3953de663729b1238ff5f03c", // "TW9wGipDxFLXvqHxBn3euBY3fWBqvExA6t",

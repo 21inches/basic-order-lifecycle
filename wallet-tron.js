@@ -38,72 +38,81 @@ class TronWallet {
         return signature;
     }
 
-    /**
-     * Sends a transaction to a smart contract on the Tron network.
-     * This version correctly handles pre-encoded data payloads from SDKs.
-     * @param {object} param The transaction parameters.
-     * @param {string} param.to The contract address (can be hex or Base58).
-     * @param {string} param.data The pre-encoded hex data payload (e.g., "0x...").
-     * @returns {Promise<{txHash: string}>}
-     */
-    async send(param) {
-        let { to, data } = param;
-        let contractAddressInBase58 = to;
 
-        // 1. Convert address if it's in hex format
-        if (typeof to === 'string' && to.startsWith('0x')) {
-            console.log(`Detected hex address: ${to}. Converting to Tron Base58 format...`);
-            contractAddressInBase58 = this.tronWeb.address.fromHex(to);
-            console.log(`Converted address: ${contractAddressInBase58}`);
-        }
+    async send({ to, value, data }) {
+        const sender = await this.getAddress();
+        const contractAddress = this.tronWeb.address.fromHex(to);
 
-        // 2. Prepare the data payload by removing the '0x' prefix
-        const fullDataPayload = data.substring(2);
+        console.log(`Sending Tron Tx to: ${contractAddress}`);
+        console.log(`Value: ${value}`);
+        console.log(`data: ${data}`);
+        console.log("-----------------------------------------------------");
 
-        console.log(`Sending Tron Tx to: ${contractAddressInBase58}`);
 
-        try {
-            // 3. Create a transaction shell.
-            // We pass an empty function selector and an empty parameters array `[]`
-            // to prevent tronweb from trying to re-encode anything.
-            const transaction = await this.tronWeb.transactionBuilder.triggerSmartContract(
-                contractAddressInBase58,
-                '00000000', // Dummy selector, it will be overwritten.
+        let unsignedTx;
+        if (data) {
+            unsignedTx = await this.tronWeb.transactionBuilder.triggerSmartContract(
+                contractAddress,
+                "0xca218276",
                 {
-                    feeLimit: 150_000_000, // Increased fee limit for complex transactions
-                    callValue: 0,
+                    callValue: Number(value),  // amount of TRX to send
+                    data: data.replace(/^0x/, ''),
+                    feeLimit: 500_000_000,  // 500 TRX; increased for complex operations
                 },
-                [], // IMPORTANT: Must be an empty array.
-                this.signerAddress
             );
 
-            if (!transaction.result || !transaction.result.result) {
-                throw new Error(`Failed to create transaction shell: ${JSON.stringify(transaction)}`);
+            if (!unsignedTx || !unsignedTx.transaction) {
+                throw new Error('Contract call failed to build transaction');
             }
 
-            // 4. Manually overwrite the 'data' field in the transaction object.
-            // This is where we inject our correct, pre-encoded payload from the SDK.
-            transaction.transaction.raw_data.contract[0].parameter.value.data = fullDataPayload;
-
-            // 5. Sign the correctly-formed transaction.
-            const signedTxn = await this.tronWeb.trx.sign(transaction.transaction, this.privateKey);
-
-            // 6. Broadcast the signed transaction.
-            const broadcast = await this.tronWeb.trx.sendRawTransaction(signedTxn);
-
-            if (broadcast.result) {
-                console.log("Tron transaction broadcast successfully:", broadcast.txid);
-                // Add a small delay to allow the node to process the transaction
-                await new Promise(resolve => setTimeout(resolve, 3000));
-                return { txHash: broadcast.txid };
-            } else {
-                const broadcastError = broadcast.message ? this.tronWeb.utils.bytes.byte2str(broadcast.message) : JSON.stringify(broadcast);
-                throw new Error(`Transaction broadcast failed: ${broadcastError}`);
-            }
-        } catch (error) {
-            console.error("Error sending Tron transaction:", error);
-            throw error;
+            unsignedTx = unsignedTx.transaction;
+        } else {
+            // Native TRX transfer
+            const toBase64 = this.tronWeb.address.toHex(to);
+            unsignedTx = await this.tronWeb.transactionBuilder.sendTrx(
+                toBase64,
+                Number(value),
+                sender
+            );
         }
+
+        const signedTx = await this.tronWeb.trx.sign(unsignedTx);
+        const result = await this.tronWeb.trx.sendRawTransaction(signedTx);
+
+        if (!result.result) {
+            throw new Error(`Transaction failed to broadcast: ${JSON.stringify(result)}`);
+        }
+
+        const txHash = signedTx.txID;
+
+        // Wait for confirmation
+        let receipt = null;
+        for (let i = 0; i < 30; i++) { // Increased retry attempts
+            try {
+                receipt = await this.tronWeb.trx.getTransactionInfo(txHash);
+                console.log(`Attempt ${i + 1}: Transaction status:`, receipt?.receipt?.result || 'PENDING');
+                if (receipt && receipt.receipt && receipt.receipt.result === 'SUCCESS') break;
+                if (receipt && receipt.receipt && receipt.receipt.result === 'FAILED') {
+                    console.log("Transaction failed:", receipt);
+                    throw new Error(`Transaction failed: ${JSON.stringify(receipt)}`);
+                }
+            } catch (error) {
+                console.log(`Attempt ${i + 1}: Error checking transaction:`, error.message);
+            }
+            await new Promise((r) => setTimeout(r, 2000)); // Increased wait time
+        }
+
+        if (!receipt || !receipt.receipt || receipt.receipt.result !== 'SUCCESS') {
+            console.log("Transaction Hash:", txHash);
+            console.log("Final receipt:", receipt);
+            throw new Error('Transaction failed or not confirmed within timeout.');
+        }
+
+        return {
+            txHash,
+            blockHash: receipt.blockHash,
+            blockTimestamp: BigInt(receipt.blockTimeStamp),
+        };
     }
 }
 
