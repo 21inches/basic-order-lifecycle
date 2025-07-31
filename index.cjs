@@ -78,30 +78,32 @@ async function createOrder(
 
 async function main() {
   // create src and dst chain users
+  const srcConfig = config.ethereumSepolia;
+  const dstConfig = config.baseSepolia;
   const srcChainUser = new Wallet(
-    config.src.UserPrivateKey,
-    new JsonRpcProvider(config.src.RpcUrl)
+    srcConfig.UserPrivateKey,
+    new JsonRpcProvider(srcConfig.RpcUrl)
   );
   const srcChainResolver = new Wallet(
-    config.src.ResolverPrivateKey,
-    new JsonRpcProvider(config.src.RpcUrl)
+    srcConfig.ResolverPrivateKey,
+    new JsonRpcProvider(srcConfig.RpcUrl)
   );
   const srcEscrowFactory = new EscrowFactory(
-    new JsonRpcProvider(config.src.RpcUrl),
-    config.src.EscrowFactory
+    new JsonRpcProvider(srcConfig.RpcUrl),
+    srcConfig.EscrowFactory
   );
 
   const dstChainUser = new Wallet(
-    config.dst.UserPrivateKey,
-    new JsonRpcProvider(config.dst.RpcUrl)
+    dstConfig.UserPrivateKey,
+    new JsonRpcProvider(dstConfig.RpcUrl)
   );
   const dstChainResolver = new Wallet(
-    config.dst.ResolverPrivateKey,
-    new JsonRpcProvider(config.dst.RpcUrl)
+    dstConfig.ResolverPrivateKey,
+    new JsonRpcProvider(dstConfig.RpcUrl)
   );
   const dstEscrowFactory = new EscrowFactory(
-    new JsonRpcProvider(config.dst.RpcUrl),
-    config.dst.EscrowFactory
+    new JsonRpcProvider(dstConfig.RpcUrl),
+    dstConfig.EscrowFactory
   );
 
   // create order
@@ -112,16 +114,16 @@ async function main() {
     "0x0000000000000000000000000000000000000000000000000000000000000000";
   const srcTimestamp = BigInt(Math.floor(Date.now() / 1000));
   const order = await createOrder(
-    config.src.EscrowFactory,
+    srcConfig.EscrowFactory,
     await srcChainUser.getAddress(),
     makingAmount,
     takingAmount,
-    config.src.BLT,
-    config.dst.BLT,
+    srcConfig.BLT,
+    dstConfig.BLT,
     secret,
-    config.src.ChainId,
-    config.dst.ChainId,
-    config.src.ResolverContractAddress,
+    srcConfig.ChainId,
+    dstConfig.ChainId,
+    srcConfig.ResolverContractAddress,
     srcTimestamp
   );
   console.log("Order created", order.build());
@@ -129,23 +131,23 @@ async function main() {
   // // sign order
   console.log("Signing order...");
   const signature = await srcChainUser.signOrder(
-    config.src.ChainId,
+    srcConfig.ChainId,
     order,
-    config.src.LOP
+    srcConfig.LOP
   );
   console.log("Order signed", signature);
 
   // fill order
   console.log("Filling order...");
   const resolverContract = new Resolver(
-    config.src.ResolverContractAddress,
-    config.dst.ResolverContractAddress
+    srcConfig.ResolverContractAddress,
+    dstConfig.ResolverContractAddress
   );
   const fillAmount = order.makingAmount;
   const { txHash: orderFillHash, blockHash: srcDeployBlock } =
     await srcChainResolver.send(
       resolverContract.deploySrc(
-        config.src.ChainId,
+        srcConfig.ChainId,
         order,
         signature,
         Sdk.TakerTraits.default()
@@ -154,7 +156,7 @@ async function main() {
           .setAmountThreshold(order.takingAmount),
         fillAmount,
         order.escrowExtension.hashLockInfo,
-        config.src.LOP
+        srcConfig.LOP
       )
     );
   console.log("Order filled", orderFillHash);
@@ -177,11 +179,11 @@ async function main() {
   const ESCROW_SRC_IMPLEMENTATION = await srcEscrowFactory.getSourceImpl();
   const ESCROW_DST_IMPLEMENTATION = await dstEscrowFactory.getDestinationImpl();
   const srcEscrowAddress = new Sdk.EscrowFactory(
-    new Address(config.src.EscrowFactory)
+    new Address(srcConfig.EscrowFactory)
   ).getSrcEscrowAddress(srcEscrowEvent[0], ESCROW_SRC_IMPLEMENTATION);
 
   const dstEscrowAddress = new Sdk.EscrowFactory(
-    new Address(config.dst.EscrowFactory)
+    new Address(dstConfig.EscrowFactory)
   ).getDstEscrowAddress(
     srcEscrowEvent[0],
     srcEscrowEvent[1],

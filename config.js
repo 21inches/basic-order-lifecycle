@@ -2,7 +2,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const config = {
-  src: {
+  ethereumSepolia: {
     LOP: "0x32a209c3736c5bd52e395eabc86b9bca4f602985",
     EscrowFactory: "0x61a32a9263c6ff568c66799a94f8fe09c1db7a66",
     ResolverContractAddress: "0xe002e8e986fd4bbff58b49423c7f7e0e0e92cc59",
@@ -17,7 +17,7 @@ const config = {
     RpcUrl: "https://ethereum-sepolia-rpc.publicnode.com",
     ResolverPrivateKey: process.env.SRC_RESOLVER_PRIVATE_KEY,
   },
-  dst: {
+  baseSepolia: {
     LOP: "0xe30f9abbadc1eb84b41d41035b2a2c7d0bd5f9b2",
     EscrowFactory: "0x178ddaca4499a89e40826ec247baf608051edf9e",
     ResolverContractAddress: "0x3fe279B56F330304446522F04907fBBe03Fe236a",
