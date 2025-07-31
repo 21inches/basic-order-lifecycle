@@ -51,7 +51,7 @@ class Resolver {
       name: "1inch Limit Order Protocol",
       version: "4",
       chainId: srcChainId,
-      verifyingContract: "0x32a209c3736c5bd52e395eabc86b9bca4f602985",
+      verifyingContract: "0x0656e98bf5b9457048b8ac0985cb48b1b6def4ac",
     };
     return ethers.TypedDataEncoder.hash(
       domain,
