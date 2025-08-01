@@ -19,7 +19,7 @@
 
 "@1inch/cross-chain-sdk@git+https://github.com/21inches/cross-chain-sdk.git":
   version "0.1.15"
-  resolved "git+https://github.com/21inches/cross-chain-sdk.git#89c8f3c91d32623655419793a9274885da657c5e"
+  resolved "git+https://github.com/21inches/cross-chain-sdk.git#4ba0757cb94cb742667d9ae30ba91ace2cbd00cf"
   dependencies:
     "@1inch/byte-utils" "2.6.0"
     "@1inch/fusion-sdk" "2.1.11-rc.2"
