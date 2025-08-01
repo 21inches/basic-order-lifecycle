@@ -32,6 +32,21 @@ const config = {
     RpcUrl: "https://base-sepolia-rpc.publicnode.com",
     ResolverPrivateKey: process.env.DST_RESOLVER_PRIVATE_KEY,
   },
+  etherlinkGhostnet: {
+    LOP: "0x60c13fAcC3d2363fa4c1D4c8A0456a4FeBc98903",
+    EscrowFactory: "0xE4F87948Efd25651CA20d8b0d750d94612f3FCB7",
+    ResolverContractAddress: "0x3e546A14BE5AA04e10Ee050498eaaA4b624FcDAA",
+    BLT: "0xb84b2c6c0d554263Eab9f56DEeA8523347270A11",
+    EscrowSrcImplementationAddress:
+      "0x056e0bb2acb8848be78f1375859f30408a89c005",
+    EscrowDstImplementationAddress:
+      "0x3b31719534a6a89403b66cb5fdc06320a0dd1604",
+    TrueERC20: "0x8382515C25930D298e3B64Eb397005f9Ae71fc0C",
+    ChainId: 128123,
+    UserPrivateKey: process.env.DST_USER_PRIVATE_KEY,
+    RpcUrl: "https://rpc.ankr.com/etherlink_testnet",
+    ResolverPrivateKey: process.env.DST_RESOLVER_PRIVATE_KEY,
+  },
 };
 
 module.exports = { config };

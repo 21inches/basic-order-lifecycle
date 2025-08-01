@@ -19,7 +19,7 @@
 
 "@1inch/cross-chain-sdk@git+https://github.com/21inches/cross-chain-sdk.git":
   version "0.1.15"
-  resolved "git+https://github.com/21inches/cross-chain-sdk.git#16af41f64bff8b4c5d752a3e9220b04ae12b9845"
+  resolved "git+https://github.com/21inches/cross-chain-sdk.git#89c8f3c91d32623655419793a9274885da657c5e"
   dependencies:
     "@1inch/byte-utils" "2.6.0"
     "@1inch/fusion-sdk" "2.1.11-rc.2"
@@ -634,9 +634,9 @@ eventemitter3@^5.0.1:
   integrity sha512-GWkBvjiSZK87ELrYOSESUYeVIc9mvLLf/nXalMOS5dYrgZq9o5OVkbZAVM06CVxYsCwH9BDZFPlQTlPA1j4ahA==
 
 follow-redirects@^1.15.6:
-  version "1.15.9"
-  resolved "https://registry.npmmirror.com/follow-redirects/-/follow-redirects-1.15.9.tgz#a604fa10e443bf98ca94228d9eebcc2e8a2c8ee1"
-  integrity sha512-gew4GsXizNgdoRyqmyfMHyAmXsZDk6mHkSxZFCzW9gwlbtOW44CDtYavM+y+72qD/Vq2l550kMF52DT8fOLJqQ==
+  version "1.15.11"
+  resolved "https://registry.npmmirror.com/follow-redirects/-/follow-redirects-1.15.11.tgz#777d73d72a92f8ec4d2e410eb47352a56b8e8340"
+  integrity sha512-deG2P0JfjrTxl50XGCDyfI97ZGVCxIpfKYmfyrQ54n5FO/0gfIES8C/Psl6kWVDolizcaaxZJnTS0QSMxvnsBQ==
 
 for-each@^0.3.5:
   version "0.3.5"
