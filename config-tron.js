@@ -12,7 +12,7 @@ const config = {
         TrueERC20: "0xf8dfdf1ab75de04f485a9871d9298a070b9bebc6", // "TYf8mVp2tC7K9AYbFFfv8gVH82JEkbKKDj",
         ChainId: 3448148188, // NILE=3448148188,  Mainnet=728126428
         UserPrivateKey: process.env.TRON_SRC_USER_PRIVATE_KEY,
-        RpcUrl: "https://nile.trongrid.io/jsonrpc",
+        RpcUrl: "https://nile.trongrid.io",
         ResolverPrivateKey: process.env.TRON_SRC_RESOLVER_PRIVATE_KEY,
     },
     dst: {

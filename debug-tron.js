@@ -4,6 +4,7 @@ dotenv.config();
 const Sdk = require("@1inch/cross-chain-sdk");
 const { parseEther, parseUnits } = require("ethers");
 const { UINT_40_MAX } = require("@1inch/byte-utils");
+const { Wallet: EVMWallet } = require("./wallet.js");
 const { TronWallet } = require("./wallet-tron.js");
 const { Resolver } = require("./resolver.js");
 const { JsonRpcProvider } = require("ethers");
@@ -30,9 +31,10 @@ async function createOrder(
   resolverAddress,
   srcTimestamp
 ) {
-  if (srcChainId == 728126428 || srcChainId == 3448148188) { // TRON & NILE
-    srcChainUserAddress = tronAddressToHex(srcChainUserAddress)
-  }
+  // if (srcChainId == 728126428 || srcChainId == 3448148188) { // TRON & NILE
+  //   srcChainUserAddress = tronAddressToHex(srcChainUserAddress)
+  // }
+  console.log("srcChainUserAddress:", srcChainUserAddress)
 
   const order = Sdk.CrossChainOrder.new(
     new Address(escrowFactoryAddress),
@@ -89,9 +91,9 @@ async function main() {
   console.log("=== TRON ORDER DEBUG ===");
   
   // create src and dst chain users
-  const srcChainUser = new TronWallet(
+  const srcChainUser = new EVMWallet(
     config.src.UserPrivateKey,
-    tronWeb
+    new JsonRpcProvider("https://base-sepolia.drpc.org")
   );
   const srcChainResolver = new TronWallet(
     config.src.ResolverPrivateKey,
@@ -113,8 +115,8 @@ async function main() {
     await srcChainUser.getAddress(),
     makingAmount,
     takingAmount,
-    config.src.USDT,
-    config.src.TrueERC20,
+    config.src.USDT, // maker asset (what maker is giving)
+    config.src.TrueERC20, // taker asset (what maker wants to receive)
     secret,
     config.src.ChainId,
     config.dst.ChainId,
@@ -122,9 +124,7 @@ async function main() {
     srcTimestamp
   );
   
-  console.log("Order created:", order.build());
-  console.log("Order hash:", order.hash());
-
+  console.log("Order created:", order.build()); 
   // sign order
   console.log("\n=== Signing order... ===");
   const signature = await srcChainUser.signOrder(config.src.ChainId, order);
