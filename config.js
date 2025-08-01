@@ -47,6 +47,21 @@ const config = {
     RpcUrl: "https://rpc.ankr.com/etherlink_testnet",
     ResolverPrivateKey: process.env.DST_RESOLVER_PRIVATE_KEY,
   },
+  monadTestnet: {
+    LOP: "0xFCf9F11666Adb060D03Bb873954673f90914bAdE",
+    EscrowFactory: "0xb84b2c6c0d554263Eab9f56DEeA8523347270A11",
+    ResolverContractAddress: "0x0642d9dE03A087588b39dBc844edE137e81f504E",
+    BLT: "0x60c13fAcC3d2363fa4c1D4c8A0456a4FeBc98903",
+    EscrowSrcImplementationAddress:
+      "0xb067a3695e316f4d6f42ef047cac941a3f0298f1",
+    EscrowDstImplementationAddress:
+      "0x4a2d6954c17ff9be4af9b0c9a74e2d0ff4cf128d",
+    TrueERC20: "0xE4F87948Efd25651CA20d8b0d750d94612f3FCB7",
+    ChainId: 10143,
+    UserPrivateKey: process.env.DST_USER_PRIVATE_KEY,
+    RpcUrl: "https://rpc.ankr.com/monad_testnet",
+    ResolverPrivateKey: process.env.DST_RESOLVER_PRIVATE_KEY,
+  }
 };
 
 module.exports = { config };
